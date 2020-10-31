@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -t miguelgrinberg/easy-lb-haproxy .
+docker build -t cesmak/easy-lb-haproxy .

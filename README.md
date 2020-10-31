@@ -1,3 +1,8 @@
+# Update:
+
+* forked by markus - use version 2.2.4 now! (LTS until 2025)
+* use newest confd confd-0.16.0-linux-amd64  --> get your architecture using: dpkg --print-architecture
+
 # easy-lb-haproxy
 
 This repository defines a load balancer container for Docker, based on haproxy, confd and etcd.
