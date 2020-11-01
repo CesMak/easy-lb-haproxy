@@ -1,7 +1,16 @@
-# Update:
+## Update:
 
 * forked by markus - use version 2.2.4 now! (LTS until 2025)
 * use newest confd confd-0.16.0-linux-amd64  --> get your architecture using: dpkg --print-architecture
+* Note that HAProxy Community is free and used here. The commercial version is [here](https://www.haproxy.com/de/products/community-vs-enterprise-edition/)
+* to see how the haproxy.tmpl file generates the final config file see:  docker exec -it 467aeb24d37d cat /usr/local/etc/haproxy/haproxy.cfg
+* see also test.cfg
+
+# HAProxy vs ngnix
+* HAProxy (High Availability Proxy) is a free, very fast and reliable solution offering high availability, load balancing, and proxying for TCP and HTTP-based applications. On the other hand, nginx is detailed as "A high performance free open source web server powering busiest sites on the Internet".
+* HAProxy belongs to "Load Balancer / Reverse Proxy" category of the tech stack, while nginx can be primarily classified under "Web Servers".
+* ngnix is way more popular
+
 
 # easy-lb-haproxy
 
