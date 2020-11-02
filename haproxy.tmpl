@@ -25,8 +25,11 @@ defaults
     stats    refresh 5s
     {{ end }}
 
-frontend http_frontend
+frontend http_frontend_name
     bind *:80
+    bind *:443 ssl crt /etc/haproxy/certs/all.pem
+    http-request redirect scheme htpps unless {ssl_fc}
+
     {{ range $service := ls "/services" }}
     {{ if ls (printf "/services/%s/upstream" $service) }}
     acl {{ $service }}_acl path_beg {{ if exists (printf "/services/%s/location" $service) }}{{ getv (printf "/services/%s/location" $service) }}{{ else }}/{{ $service }}{{ end }}

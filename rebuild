@@ -1,0 +1,15 @@
+#!/bin/bash
+
+
+# 1. make your changes to haproxy.toml
+./build.sh
+#2
+docker container stop lb
+docker container rm lb
+docker run --name lb -d --restart always -p 80:80 -p 443:443 -e ETCD_PEERS=$ETCD -e HAPROXY_STATS=1 cesmak/easy-lb-haproxy:latest
+echo ""
+echo ""
+docker exec -it lb ls /usr/local/etc/haproxy
+echo ""
+echo ""
+docker exec -it lb cat /usr/local/etc/haproxy/haproxy.cfg
