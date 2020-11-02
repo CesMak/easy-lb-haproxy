@@ -6,7 +6,7 @@ RUN mkdir -p /etc/haproxy/certs
 COPY confd .
 RUN chmod +x confd
 COPY haproxy.toml /etc/confd/conf.d/
-COPY ssl.tmpl /etc/confd/templates/
+COPY haproxy.tmpl /etc/confd/templates/
 COPY all.pem /etc/haproxy/certs/
 COPY boot.sh .
 COPY watcher.sh .
