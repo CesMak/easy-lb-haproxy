@@ -13,7 +13,6 @@
 
 
 # easy-lb-haproxy
-
 This repository defines a load balancer container for Docker, based on haproxy, confd and etcd.
 
 ## High-level design

@@ -11,4 +11,5 @@ while [ ! -f /usr/local/etc/haproxy/haproxy.cfg ]; do
     sleep 1
 done
 
+# remove all empty lines in haproxy.cfg file to make it readable
 exec /docker-entrypoint.sh haproxy -f /usr/local/etc/haproxy/haproxy.cfg

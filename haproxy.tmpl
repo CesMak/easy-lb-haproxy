@@ -2,6 +2,15 @@ global
     log /dev/log    local0
     log /dev/log    local1 notice
 
+    #modern config Supports Firefox 63, Android 10.0, Chrome 70, Edge 75, Java 11, OpenSSL 1.1.1, Opera 57, and Safari 12.1
+    # see: https://ssl-config.mozilla.org/#server=haproxy&version=2.1&config=modern&openssl=1.1.1d&guideline=5.6
+    # test site with https://www.ssllabs.com/ssltest
+    ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
+    ssl-default-bind-options prefer-client-ciphers no-sslv3 no-tlsv10 no-tlsv11 no-tlsv12 no-tls-tickets
+
+    ssl-default-server-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
+    ssl-default-server-options no-sslv3 no-tlsv10 no-tlsv11 no-tlsv12 no-tls-tickets
+
 defaults
     log    global
     mode    http
@@ -27,8 +36,11 @@ defaults
 
 frontend http_frontend_name
     bind *:80
+    {{ if (getenv "HAPROXY_SERVERNAME") }}
     bind *:443 ssl crt /etc/haproxy/certs/all.pem
-    http-request redirect scheme htpps unless {ssl_fc}
+    # use https / ssl only - forward if not
+    #redirect scheme https if !{ ssl_fc }
+    {{ end }}
 
     {{ range $service := ls "/services" }}
     {{ if ls (printf "/services/%s/upstream" $service) }}
@@ -56,7 +68,12 @@ backend {{ $service }}_backend
     balance roundrobin
     {{ end }}
     {{ range $server := ls (printf "/services/%s/upstream" $service) }}
+
+    {{ if (getenv "HAPROXY_SERVERNAME") }}
+    server {{ getenv ("HAPROXY_SERVERNAME")}}  {{ getv (printf "/services/%s/upstream/%s" $service $server) }} check
+    {{ else }}
     server {{ $server }} {{ getv (printf "/services/%s/upstream/%s" $service $server) }} check
+    {{ end }}
     {{ end }}
 {{ end }}
 {{ end }}

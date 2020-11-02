@@ -2,14 +2,32 @@
 
 
 # 1. make your changes to haproxy.toml
-./build.sh
-#2
+
+# 2. restart all:
+echo "Stop the conteriner lb"
 docker container stop lb
 docker container rm lb
-docker run --name lb -d --restart always -p 80:80 -p 443:443 -e ETCD_PEERS=$ETCD -e HAPROXY_STATS=1 cesmak/easy-lb-haproxy:latest
+
+source ../.profile
+
+./build.sh
+
+echo""
+echo""
+echo "Service Registry: ETCD= $ETCD"
+# set HAPROXY_SERVERNAME arg to use ssl --> this requires an all.pem certificate!
+# if HAPROXY_SERVERNAME is not set --> you can access to your site via: http://192.168.178.44/
+docker run --name lb -d --restart always -p 80:80 -p 443:443 -e ETCD_PEERS=$ETCD -e HAPROXY_STATS=1 -e HAPROXY_SERVERNAME=idgaming.de  cesmak/easy-lb-haproxy:latest
+
 echo ""
 echo ""
 docker exec -it lb ls /usr/local/etc/haproxy
+
 echo ""
 echo ""
+sleep 0.4
+docker exec -it lb sed -i '/^[[:space:]]*$/d' /usr/local/etc/haproxy/haproxy.cfg
 docker exec -it lb cat /usr/local/etc/haproxy/haproxy.cfg
+echo ""
+echo ""
+docker exec -it lb ls /etc/haproxy/certs/
