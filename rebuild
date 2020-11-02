@@ -10,6 +10,7 @@ docker container rm lb
 
 source ../.profile
 
+sudo cat /etc/letsencrypt/live/idgaming.de/cert.pem /etc/letsencrypt/live/idgaming.de/privkey.pem > "$INSTALL_PATH/easy-lb-haproxy"/all.pem
 ./build.sh
 
 echo""
